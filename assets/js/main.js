@@ -40,10 +40,35 @@
     dropdown();
 })();
 
+/* Give tag pills dark text when their accent color is too light to read as colored text.
+   Same YIQ contrast calculation used in default.hbs for the site background. */
+function applyTagPillContrast(root) {
+    (root || document).querySelectorAll('.gh-card-tag-pill').forEach(function (pill) {
+        var accentColor = pill.style.getPropertyValue('--tag-color').trim().replace('#', '');
+
+        if (accentColor.length === 3) {
+            accentColor = accentColor[0] + accentColor[0] + accentColor[1] + accentColor[1] + accentColor[2] + accentColor[2];
+        }
+        if (accentColor.length !== 6) return;
+
+        var r = parseInt(accentColor.substr(0, 2), 16);
+        var g = parseInt(accentColor.substr(2, 2), 16);
+        var b = parseInt(accentColor.substr(4, 2), 16);
+        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+        pill.classList.toggle('has-dark-text', yiq >= 128);
+    });
+}
+applyTagPillContrast();
+
 /* Infinite scroll pagination */
 (function () {
     if (!document.body.classList.contains('home-template') && !document.body.classList.contains('post-template')) {
-        pagination();
+        pagination(true, function (elems) {
+            elems.forEach(function (elem) {
+                applyTagPillContrast(elem);
+            });
+        });
     }
 })();
 
