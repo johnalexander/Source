@@ -909,7 +909,13 @@ Search                         LOGO                    Login Subscribe
     gap: 20px;
 }
 
-.gh-card-link:hover {
+.gh-card-image-link,
+.gh-card-content-link {
+    display: block;
+}
+
+.gh-card-image-link:hover,
+.gh-card-content-link:hover {
     opacity: 1;
 }
 
@@ -987,6 +993,27 @@ Search                         LOGO                    Login Subscribe
 .gh-card-author + .gh-card-date::before {
     content: "—";
     margin-right: 4px;
+}
+
+.gh-card-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.gh-card-tag-pill {
+    padding: 2px 9px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--tag-color);
+    background-color: color-mix(in srgb, var(--tag-color) 12%, transparent);
+    border-radius: 100px;
+}
+
+.gh-card-tag-pill:hover {
+    background-color: color-mix(in srgb, var(--tag-color) 22%, transparent);
+    opacity: 1;
 }
 
 /* 8. Header
