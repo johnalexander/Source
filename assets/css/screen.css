@@ -937,6 +937,15 @@ Search                         LOGO                    Login Subscribe
     flex-grow: 1;
 }
 
+.gh-card-tag {
+    display: none;
+    margin-bottom: 4px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+
 .gh-card-title {
     font-size: calc(1.9rem * var(--factor, 1));
     font-weight: 725;
@@ -1058,6 +1067,11 @@ Search                         LOGO                    Login Subscribe
 
 .gh-header.is-magazine .gh-header-inner > .gh-card .gh-card-image {
     aspect-ratio: 1.618033;
+}
+
+.gh-header.is-magazine .gh-header-inner > .gh-card .gh-card-tag {
+    display: block;
+    margin-bottom: 12px;
 }
 
 .gh-header.is-magazine .gh-header-inner > .gh-card .gh-card-title {
@@ -1225,6 +1239,11 @@ Search                         LOGO                    Login Subscribe
 
 .gh-header.is-highlight .gh-header-left .gh-card .gh-card-image {
     aspect-ratio: 3 / 2;
+}
+
+.gh-header.is-highlight .gh-header-left .gh-card .gh-card-tag {
+    display: block;
+    margin-bottom: 12px;
 }
 
 .gh-header.is-highlight .gh-header-left .gh-card .gh-card-title {
