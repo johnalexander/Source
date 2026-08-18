@@ -22,25 +22,44 @@
         :root {
             --background-color: {{@custom.site_background_color}}
         }
+
+        {{!-- Dark mode always uses a fixed dark neutral, regardless of the light
+        background chosen above, matching how most sites handle system dark mode.
+        #18181B is the brand's dark-mode anchor - the site's tag palette dark-mode
+        colors were contrast-checked against this exact value, so it needs to match
+        here for those contrast guarantees to hold. --}}
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #18181b;
+            }
+        }
     </style>
 
     <script>
         /* The script for calculating the color contrast has been taken from
         https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
-        var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
-        accentColor = accentColor.trim().slice(1);
+        function updateTextColorClass() {
+            var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+            accentColor = accentColor.trim().slice(1);
 
-        if (accentColor.length === 3) {
-            accentColor = accentColor[0] + accentColor[0] + accentColor[1] + accentColor[1] + accentColor[2] + accentColor[2];
+            if (accentColor.length === 3) {
+                accentColor = accentColor[0] + accentColor[0] + accentColor[1] + accentColor[1] + accentColor[2] + accentColor[2];
+            }
+
+            var r = parseInt(accentColor.substr(0, 2), 16);
+            var g = parseInt(accentColor.substr(2, 2), 16);
+            var b = parseInt(accentColor.substr(4, 2), 16);
+            var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            var textColor = (yiq >= 128) ? 'dark' : 'light';
+
+            document.documentElement.className = `has-${textColor}-text`;
         }
 
-        var r = parseInt(accentColor.substr(0, 2), 16);
-        var g = parseInt(accentColor.substr(2, 2), 16);
-        var b = parseInt(accentColor.substr(4, 2), 16);
-        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-        var textColor = (yiq >= 128) ? 'dark' : 'light';
+        updateTextColorClass();
 
-        document.documentElement.className = `has-${textColor}-text`;
+        {{!-- --background-color switches with the OS dark-mode preference (see above),
+        so recompute whenever that preference changes instead of only on page load --}}
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTextColorClass);
     </script>
 
     {{!-- This tag outputs all your advanced SEO meta, structured data, and other important settings, it should always be the last tag before the closing head tag --}}

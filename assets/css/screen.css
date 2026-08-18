@@ -692,7 +692,7 @@ Search                         LOGO                    Login Subscribe
     margin-top: 24px;
     text-align: left;
     visibility: hidden;
-    background-color: #fff;
+    background-color: var(--background-color);
     border-radius: 5px;
     box-shadow: 0 0 0 1px rgb(0 0 0 / 0.04), 0 7px 20px -5px rgb(0 0 0 / 0.15);
     opacity: 0;
@@ -725,7 +725,7 @@ Search                         LOGO                    Login Subscribe
     padding: 7px 20px;
     line-height: 1.5;
     white-space: normal;
-    color: #15171a !important;
+    color: var(--color-primary-text) !important;
 }
 
 .is-dropdown-mega .gh-dropdown li a {
@@ -909,7 +909,13 @@ Search                         LOGO                    Login Subscribe
     gap: 20px;
 }
 
-.gh-card-link:hover {
+.gh-card-image-link,
+.gh-card-content-link {
+    display: block;
+}
+
+.gh-card-image-link:hover,
+.gh-card-content-link:hover {
     opacity: 1;
 }
 
@@ -987,6 +993,47 @@ Search                         LOGO                    Login Subscribe
 .gh-card-author + .gh-card-date::before {
     content: "—";
     margin-right: 4px;
+}
+
+.gh-card-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.gh-card-tag-pill {
+    padding: 2px 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--tag-color);
+    background-color: color-mix(in srgb, var(--tag-color) 12%, transparent);
+    border-radius: 100px;
+}
+
+.gh-card-tag-pill:hover {
+    background-color: color-mix(in srgb, var(--tag-color) 22%, transparent);
+    opacity: 1;
+}
+
+.gh-card-tag-pill.has-dark-text {
+    color: var(--color-darker-gray);
+}
+
+/* Dark-mode tag colors are a separate curated palette (not derived from the
+light-mode accent_color), so every pill switches to --tag-color-dark here,
+including has-dark-text ones — those dark hex values are already tuned for
+contrast against a dark background per the site's tag color/contrast doc. */
+@media (prefers-color-scheme: dark) {
+    .gh-card-tag-pill,
+    .gh-card-tag-pill.has-dark-text {
+        color: var(--tag-color-dark);
+        background-color: color-mix(in srgb, var(--tag-color-dark) 14%, transparent);
+    }
+
+    .gh-card-tag-pill:hover {
+        background-color: color-mix(in srgb, var(--tag-color-dark) 26%, transparent);
+    }
 }
 
 /* 8. Header

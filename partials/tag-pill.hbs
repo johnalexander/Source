@@ -1,0 +1,12 @@
+{{!-- Renders one tag pill (used from post-card.hbs's {{#foreach tags}}).
+Handlebars can't compute color math or read a second accent color per tag, so
+both lookups below are hardcoded from the site's tag color/contrast design doc
+and matched by slug. Update them if a tag's color changes or a new tag is
+added — light-mode color still comes live from Ghost's accent_color; only the
+dark-mode hex and the "is this light-mode color too light to read as text"
+list are hardcoded here. --}}
+<a
+    class="gh-card-tag-pill{{#match slug "culture"}} has-dark-text{{else match slug "art"}} has-dark-text{{else match slug "internet-culture"}} has-dark-text{{else match slug "makers-repair"}} has-dark-text{{else match slug "southpole-lab"}} has-dark-text{{else match slug "bbs"}} has-dark-text{{else match slug "writers-room"}} has-dark-text{{/match}}"
+    href="{{url}}"
+    style="--tag-color: {{#if accent_color}}{{accent_color}}{{else}}#71717a{{/if}}; --tag-color-dark: {{#match slug "ai"}}#7771EB{{else match slug "technology"}}#0EA5E9{{else match slug "culture"}}#F59E0B{{else match slug "art"}}#EC4899{{else match slug "music"}}#9064F6{{else match slug "space"}}#8596BD{{else match slug "digital-memory"}}#7388A5{{else match slug "internet-culture"}}#22C55E{{else match slug "makers-repair"}}#F97316{{else match slug "ethics"}}#E24B4B{{else match slug "history-echoes"}}#B77008{{else match slug "design"}}#129086{{else match slug "future-of-work"}}#6F72F2{{else match slug "education"}}#477BEE{{else match slug "privacy-security"}}#B6C2D4{{else match slug "southpole-lab"}}#22D3EE{{else match slug "bbs"}}#10B981{{else match slug "writers-room"}}#A856F7{{else match slug "agents"}}#F43F5E{{else match slug "dispatch"}}#7D8492{{else match slug "field-notes"}}#9E9893{{else match slug "interview"}}#C6C4C0{{else match slug "essay"}}#DCDAD7{{else match slug "review"}}#AEAEB6{{else}}#a1a1aa{{/match}}"
+>{{name}}</a>
