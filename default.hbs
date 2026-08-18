@@ -24,10 +24,13 @@
         }
 
         {{!-- Dark mode always uses a fixed dark neutral, regardless of the light
-        background chosen above, matching how most sites handle system dark mode --}}
+        background chosen above, matching how most sites handle system dark mode.
+        #18181B is the brand's dark-mode anchor - the site's tag palette dark-mode
+        colors were contrast-checked against this exact value, so it needs to match
+        here for those contrast guarantees to hold. --}}
         @media (prefers-color-scheme: dark) {
             :root {
-                --background-color: #15171a;
+                --background-color: #18181b;
             }
         }
     </style>
