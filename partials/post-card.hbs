@@ -42,9 +42,15 @@
              -->{{#if @custom.show_publish_date}}
                     <time class="gh-card-date" datetime="{{date format="YYYY-MM-DD"}}">{{date format="DD MMM YYYY"}}</time>
                 {{/if}}
-                {{#foreach tags visibility="public"}}
-                    {{name}}
-                {{/foreach}}
+                {{#if tags}}
+                    {{!-- Handlebars can't compute color contrast, so tags whose accent_color is
+                    too light to read as text (YIQ >= 128) are listed here by slug. Recompute and
+                    update this list if a tag's accent color changes or a new light tag is added:
+                    culture, art, internet-culture, makers-repair, southpole-lab, bbs, writers-room --}}
+                    <span class="gh-card-tags">
+                        {{#foreach tags visibility="public"}}<a class="gh-card-tag-pill{{#match slug "culture"}} has-dark-text{{else match slug "art"}} has-dark-text{{else match slug "internet-culture"}} has-dark-text{{else match slug "makers-repair"}} has-dark-text{{else match slug "southpole-lab"}} has-dark-text{{else match slug "bbs"}} has-dark-text{{else match slug "writers-room"}} has-dark-text{{/match}}" href="{{url}}" style="--tag-color: {{#if accent_color}}{{accent_color}}{{else}}#71717a{{/if}}">{{name}}</a>{{/foreach}}
+                    </span>
+                {{/if}}
             </footer>
         </div>
     </div>
