@@ -22,6 +22,14 @@
         :root {
             --background-color: {{@custom.site_background_color}}
         }
+
+        {{!-- Dark mode always uses a fixed dark neutral, regardless of the light
+        background chosen above, matching how most sites handle system dark mode --}}
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #15171a;
+            }
+        }
     </style>
 
     <script>
