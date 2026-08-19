@@ -995,6 +995,10 @@ Search                         LOGO                    Login Subscribe
     margin-right: 4px;
 }
 
+.gh-card-date + .gh-card-tags {
+    margin-left: 6px;
+}
+
 .gh-card-tags {
     display: inline-flex;
     flex-wrap: wrap;
@@ -2052,52 +2056,10 @@ contrast against a dark background per the site's tag color/contrast doc. */
     margin-left: 6px;
 }
 
-.gh-article-author-image {
-    display: flex;
-    margin-right: 8px;
-}
-
-.gh-article-author-image a {
-    position: relative;
-    margin: 0 -8px;
-    width: 56px;
-    height: 56px;
-    overflow: hidden;
-    background-color: var(--color-light-gray);
-    border-radius: 50%;
-    border: 3px solid var(--background-color);
-}
-
-.gh-article-author-image a:first-child {
-    z-index: 10;
-}
-
-.gh-article-author-image a:nth-child(2) {
-    z-index: 9;
-}
-
-.gh-article-author-image a:nth-child(3) {
-    z-index: 8;
-}
-
-.gh-article-author-image :is(img, svg) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .gh-article-meta-wrapper {
     display: flex;
     flex-direction: column;
     gap: 4px;
-}
-
-.gh-article-author-name {
-    font-size: 1.6rem;
-    font-weight: 650;
-    letter-spacing: -0.013em;
 }
 
 .gh-article-meta-content {

@@ -182,11 +182,6 @@
                 "group": "homepage",
                 "visibility": "post_feed_style:List"
             },
-            "show_author": {
-                "type": "boolean",
-                "default": true,
-                "group": "homepage"
-            },
             "show_publish_date": {
                 "type": "boolean",
                 "default": true,
