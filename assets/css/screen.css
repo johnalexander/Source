@@ -1815,6 +1815,10 @@ contrast against a dark background per the site's tag color/contrast doc. */
         align-items: flex-start;
     }
 
+    .gh-container.is-list .gh-card-image-link {
+        width: 100%;
+    }
+
     .gh-container.is-list .gh-card-image {
         width: 100%;
     }
