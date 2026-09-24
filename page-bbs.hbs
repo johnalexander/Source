@@ -38,15 +38,14 @@
                 </a>
             </div>
             {{else}}
-            <div class="bbs-cta-wrap" id="bbs-member-cta">
-                {{!-- Default: enter the BBS (hidden until member-status check completes) --}}
+            {{!-- Hidden until JS resolves member-status (prevents phantom black box) --}}
+            <div class="bbs-cta-wrap" id="bbs-member-cta" style="display:none">
                 <a
                     href="https://bbs.southpole.blog"
                     id="bbs-enter-btn"
                     class="gh-button bbs-cta-btn"
                     style="display:none"
                 >Enter the BBS →</a>
-                {{!-- Shown if member has no handle yet --}}
                 <button
                     id="bbs-invite-btn"
                     class="gh-button bbs-cta-btn bbs-cta-outline"
@@ -68,13 +67,11 @@
         padding-top: 0;
     }
 
-    /* ── Art block ───────────────────────────────────────────────── */
+    /* ── Art block — transparent, matches Ghost page background ─────── */
     .bbs-block {
-        background: #0a0a0a;
-        border-radius: 6px;
-        padding: 20px 20px 12px;
-        margin-bottom: 20px;
-        font-family: 'Courier New', Courier, monospace;
+        background: transparent;
+        padding: 0 0 12px;
+        margin-bottom: 8px;
     }
 
     /* Loading skeleton */
@@ -87,7 +84,7 @@
     .bbs-loading-bar {
         width: 120px;
         height: 3px;
-        background: #1a3322;
+        background: #ccc;
         border-radius: 2px;
         animation: bbs-pulse 1.4s ease-in-out infinite;
     }
@@ -97,22 +94,22 @@
         50%       { opacity: 1; }
     }
 
-    /* Art */
+    /* Art — line-height: 1 is critical to eliminate row gaps */
     .bbs-art {
         font-family: 'Courier New', Courier, 'Lucida Console', monospace;
         font-size: clamp(6px, 1.1vw, 10px);
-        line-height: 1.1;
+        line-height: 1;
         white-space: pre;
         overflow: hidden;
-        color: #00ff88;
-        margin: 0 0 6px;
+        margin: 0 0 8px;
         display: none; /* shown by JS after load */
     }
 
     .bbs-caption {
         font-family: 'Courier New', Courier, monospace;
-        font-size: 11px;
-        color: #446644;
+        font-size: 12px;
+        color: inherit;
+        opacity: 0.5;
         margin: 0 0 0;
         display: none;
     }
@@ -120,15 +117,16 @@
     /* Divider */
     .bbs-rule {
         border: none;
-        border-top: 1px solid #1a3322;
-        margin: 12px 0;
+        border-top: 1px solid var(--color-border, #e5e7eb);
+        margin: 14px 0;
     }
 
     /* Stories */
     .bbs-stories-label {
         font-family: 'Courier New', Courier, monospace;
         font-size: 10px;
-        color: #44aa66;
+        color: inherit;
+        opacity: 0.45;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         margin: 0 0 6px;
@@ -140,20 +138,17 @@
         padding: 0;
         margin: 0;
         font-family: 'Courier New', Courier, monospace;
-        font-size: 12px;
-        color: #88cc99;
-        line-height: 1.65;
+        font-size: 13px;
+        color: inherit;
+        line-height: 1.7;
         display: none;
-    }
-
-    .bbs-stories li.muted {
-        color: #336644;
     }
 
     /* ── CTA ─────────────────────────────────────────────────────── */
     .bbs-cta-wrap {
         text-align: center;
-        padding: 4px 0 8px;
+        padding: 16px 0 4px;
+        min-height: 0; /* no phantom height when buttons are hidden */
     }
 
     .bbs-cta-btn {
@@ -243,19 +238,26 @@
     var confirm   = document.getElementById('bbs-invite-confirm');
     var uuid      = '{{@member.uuid}}';
 
-    if (!uuid) { if(enterBtn) enterBtn.style.display=''; return; }
+    var ctaWrap = document.getElementById('bbs-member-cta');
+
+    function showCta(el) {
+        if (el) el.style.display = '';
+        if (ctaWrap) ctaWrap.style.display = '';
+    }
+
+    if (!uuid) { showCta(enterBtn); return; }
 
     fetch('https://bbs.southpole.blog/api/member-status?uuid=' + encodeURIComponent(uuid), { credentials: 'omit' })
         .then(function(r){ return r.json(); })
         .then(function(data){
             if (data && data.hasHandle === false) {
-                if (inviteBtn) inviteBtn.style.display = '';
+                showCta(inviteBtn);
             } else {
-                if (enterBtn) enterBtn.style.display = '';
+                showCta(enterBtn);
             }
         })
         .catch(function(){
-            if (enterBtn) enterBtn.style.display = '';
+            showCta(enterBtn);
         });
 
     if (inviteBtn) {
