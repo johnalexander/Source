@@ -37,20 +37,16 @@
                     loading="lazy"
                 ></iframe>
             </div>
+            {{!-- Only shown by JS when member has no handle yet (invite path) --}}
             <div
                 id="bbs-portal"
                 class="bbs-member-cta"
                 data-uuid="{{@member.uuid}}"
+                style="display:none"
             >
-                <a
-                    href="https://bbs.southpole.blog"
-                    id="bbs-enter-btn"
-                    class="gh-button bbs-btn bbs-enter"
-                >Enter the BBS →</a>
                 <button
                     id="bbs-invite-btn"
                     class="gh-button bbs-btn bbs-invite"
-                    style="display:none"
                     type="button"
                 >Send my BBS invite →</button>
                 <p id="bbs-invite-confirm" class="bbs-invite-confirm" style="display:none"></p>
@@ -118,12 +114,6 @@
         text-decoration: none;
     }
 
-    .bbs-enter {
-        background: var(--ghost-accent-color, #15171a);
-        color: #fff;
-        border: none;
-    }
-
     .bbs-invite {
         background: transparent;
         color: var(--ghost-accent-color, #15171a);
@@ -146,24 +136,25 @@
     var uuid = portal.dataset.uuid;
     if (!uuid) return;
 
-    var enterBtn  = document.getElementById('bbs-enter-btn');
     var inviteBtn = document.getElementById('bbs-invite-btn');
     var confirm   = document.getElementById('bbs-invite-confirm');
 
-    // Check whether this member already has a BBS handle
+    // Check whether this member already has a BBS handle.
+    // If not, reveal the portal div and show the invite button.
     fetch('https://bbs.southpole.blog/api/member-status?uuid=' + encodeURIComponent(uuid), {
         credentials: 'omit'
     })
     .then(function (r) { return r.json(); })
     .then(function (data) {
         if (data && data.hasHandle === false) {
-            // No handle yet — show invite button instead
-            if (enterBtn)  enterBtn.style.display  = 'none';
-            if (inviteBtn) inviteBtn.style.display  = '';
+            // No handle yet — surface the invite panel
+            portal.style.display = '';
+            if (inviteBtn) inviteBtn.style.display = '';
         }
+        // hasHandle === true → iframe already shows [ ENTER THE BBS ]; nothing to do
     })
     .catch(function () {
-        // Network error — leave "Enter the BBS" visible; BBS login handles the edge case
+        // Network error — leave everything hidden; BBS login handles the edge case
     });
 
     // Invite button: request a fresh welcome email
