@@ -64,6 +64,7 @@
 <style>
     .bbs-page-section {
         padding-top: 0;
+        padding-bottom: 0;
     }
 
     /* Loading skeleton */
@@ -163,7 +164,7 @@
     .bbs-access-hint {
         text-align: center;
         font-size: 0.9rem;
-        margin: 4px 0 8px;
+        margin: 4px 0 0;
     }
 
     /* Member CTA button */
@@ -260,6 +261,17 @@
         if (el) el.style.display = '';
         if (ctaWrap) ctaWrap.style.display = '';
     }
+
+    // Upgrade the enter button to go straight to /terminal.html if already logged in.
+    // Runs in parallel with member-status check; updates href if session is valid.
+    fetch('https://bbs.southpole.blog/api/session', { credentials: 'include' })
+        .then(function(r){
+            if (r.ok && enterBtn) {
+                enterBtn.textContent = 'Enter the BBS →';
+                enterBtn.href = 'https://bbs.southpole.blog/terminal.html';
+            }
+        })
+        .catch(function(){ /* no session — leave href as-is */ });
 
     if (!uuid) { showCta(enterBtn); return; }
 
