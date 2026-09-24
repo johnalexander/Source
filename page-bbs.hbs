@@ -7,6 +7,18 @@
 <main class="gh-main">
     <article class="gh-article {{post_class}}">
 
+        {{!-- Title + excerpt — editable in Ghost Admin as page title / custom excerpt --}}
+        <header class="gh-article-header gh-canvas">
+            <h1 class="gh-article-title is-title">{{title}}</h1>
+            {{#if custom_excerpt}}
+                <p class="gh-article-excerpt is-body">{{custom_excerpt}}</p>
+            {{/if}}
+            <p class="bbs-direct-link is-body">
+                Also accessible directly at
+                <a href="https://bbs.southpole.blog">bbs.southpole.blog</a>
+            </p>
+        </header>
+
         <section class="gh-content gh-canvas bbs-page-section">
 
             {{!-- Skeleton shown while API call is in flight --}}
@@ -65,6 +77,12 @@
     .bbs-page-section {
         padding-top: 0;
         padding-bottom: 0;
+    }
+
+    .bbs-direct-link {
+        margin-top: 0.4em;
+        font-size: 0.95em;
+        opacity: 0.6;
     }
 
     /* Loading skeleton */
