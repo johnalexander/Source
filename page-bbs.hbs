@@ -1,7 +1,7 @@
 {{!< default}}
 {{!-- Template for the /bbs page. Ghost Admin: create a page with slug "bbs".
-     This template fetches art + stories directly from the BBS API and renders
-     them natively in Ghost's canvas — no iframe, no duplicate wordmark. --}}
+     Fetches art + stories from BBS API. No iframe, no duplicate wordmark.
+     Layout: Recent Stories → Art Gallery → CTA --}}
 
 {{#post}}
 <main class="gh-main">
@@ -9,36 +9,36 @@
 
         <section class="gh-content gh-canvas bbs-page-section">
 
-            {{!-- ── Art + stories block (populated by JS) ─────────────────── --}}
-            <div class="bbs-block" id="bbs-block">
-
-                {{!-- Skeleton shown while loading --}}
-                <div class="bbs-loading" id="bbs-loading">
-                    <div class="bbs-loading-bar"></div>
-                </div>
-
-                {{!-- Art rendered here --}}
-                <pre class="bbs-art" id="bbs-art" aria-label="ASCII art"></pre>
-                <p class="bbs-caption" id="bbs-caption"></p>
-
-                <hr class="bbs-rule">
-
-                <p class="bbs-stories-label">RECENT STORIES</p>
-                <ul class="bbs-stories" id="bbs-stories"></ul>
-
-                <hr class="bbs-rule">
-
+            {{!-- Skeleton shown while API call is in flight --}}
+            <div class="bbs-loading" id="bbs-loading">
+                <div class="bbs-loading-bar"></div>
             </div>
+
+            {{!-- ── RECENT STORIES ─────────────────────────────────────────── --}}
+            <div class="bbs-section" id="bbs-stories-section" style="display:none">
+                <h3 class="bbs-section-heading">Recent Stories</h3>
+                <ul class="bbs-stories" id="bbs-stories"></ul>
+            </div>
+
+            <hr class="bbs-rule" id="bbs-rule-1" style="display:none">
+
+            {{!-- ── ART GALLERY ──────────────────────────────────────────────── --}}
+            <div class="bbs-section" id="bbs-art-section" style="display:none">
+                <h3 class="bbs-section-heading">Art Gallery</h3>
+                <pre class="bbs-art" id="bbs-art" aria-label="ASCII gallery art"></pre>
+                <p class="bbs-caption" id="bbs-caption"></p>
+            </div>
+
+            <hr class="bbs-rule" id="bbs-rule-2" style="display:none">
 
             {{!-- ── CTA ─────────────────────────────────────────────────────── --}}
             {{#unless @member}}
-            <div class="bbs-cta-wrap">
+            <div class="bbs-cta-wrap" id="bbs-cta-public" style="display:none">
                 <a href="#/portal/signup" class="gh-button bbs-cta-btn" data-portal="signup">
                     Subscribe to SouthPole →
                 </a>
             </div>
             {{else}}
-            {{!-- Hidden until JS resolves member-status (prevents phantom black box) --}}
             <div class="bbs-cta-wrap" id="bbs-member-cta" style="display:none">
                 <a
                     href="https://bbs.southpole.blog"
@@ -62,16 +62,8 @@
 </main>
 
 <style>
-    /* ── Page section ────────────────────────────────────────────── */
     .bbs-page-section {
         padding-top: 0;
-    }
-
-    /* ── Art block — transparent, matches Ghost page background ─────── */
-    .bbs-block {
-        background: transparent;
-        padding: 0 0 12px;
-        margin-bottom: 8px;
     }
 
     /* Loading skeleton */
@@ -94,61 +86,74 @@
         50%       { opacity: 1; }
     }
 
-    /* Art — line-height: 1 is critical to eliminate row gaps */
+    /* Section headings — match Ghost's h3 but stay in flow */
+    .bbs-section {
+        margin-bottom: 4px;
+    }
+
+    .bbs-section-heading {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-darkgrey, #15171a);
+        margin: 0 0 12px;
+        padding: 0;
+    }
+
+    /* Stories */
+    .bbs-stories {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-darkgrey, #15171a);
+        line-height: 1.8;
+    }
+
+    .bbs-stories li::before {
+        content: '> ';
+        opacity: 0.4;
+    }
+
+    /* Art — Ghost themes often set line-height on pre; override both here and
+       via the inline style set by JS to guarantee no row gaps */
     .bbs-art {
         font-family: 'Courier New', Courier, 'Lucida Console', monospace;
-        font-size: clamp(6px, 1.1vw, 10px);
-        line-height: 1;
+        font-size: clamp(6px, 1.05vw, 9.5px);
+        /* line-height MUST be exactly 1 — any larger creates white stripes */
+        line-height: 1 !important;
         white-space: pre;
         overflow: hidden;
-        margin: 0 0 8px;
-        display: none; /* shown by JS after load */
+        margin: 0 0 10px;
+        padding: 0;
+        /* reset any Ghost theme pre styles */
+        background: transparent;
+        border: none;
+        border-radius: 0;
     }
 
     .bbs-caption {
         font-family: 'Courier New', Courier, monospace;
-        font-size: 12px;
-        color: inherit;
-        opacity: 0.5;
-        margin: 0 0 0;
-        display: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-darkgrey, #15171a);
+        margin: 0;
     }
 
     /* Divider */
     .bbs-rule {
         border: none;
         border-top: 1px solid var(--color-border, #e5e7eb);
-        margin: 14px 0;
+        margin: 20px 0;
     }
 
-    /* Stories */
-    .bbs-stories-label {
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 10px;
-        color: inherit;
-        opacity: 0.45;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        margin: 0 0 6px;
-        display: none;
-    }
-
-    .bbs-stories {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 13px;
-        color: inherit;
-        line-height: 1.7;
-        display: none;
-    }
-
-    /* ── CTA ─────────────────────────────────────────────────────── */
+    /* CTA */
     .bbs-cta-wrap {
         text-align: center;
-        padding: 16px 0 4px;
-        min-height: 0; /* no phantom height when buttons are hidden */
+        padding: 4px 0 8px;
     }
 
     .bbs-cta-btn {
@@ -177,7 +182,7 @@
     }
 </style>
 
-{{!-- ── JS: fetch BBS preview data + wire up member CTA ─────────────── --}}
+{{!-- ── JS: fetch BBS preview, render content, show CTA ──────────────── --}}
 <script>
 (function () {
     var ANSI_TABLE = [[0,0,0],[128,0,0],[0,128,0],[128,128,0],[0,0,128],[128,0,128],[0,128,128],[192,192,192],[128,128,128],[255,0,0],[0,255,0],[255,255,0],[0,0,255],[255,0,255],[0,255,255],[255,255,255]];
@@ -187,41 +192,50 @@
         function span(t){if(!t)return;var st=[];if(fg!==null){var c=ansi256(fg);st.push('color:rgb('+c[0]+','+c[1]+','+c[2]+')');}if(bg!==null){var c2=ansi256(bg);st.push('background:rgb('+c2[0]+','+c2[1]+','+c2[2]+')');}html+='<span'+(st.length?' style="'+st.join(';')+'"':'')+'>'+esc(t)+'</span>';}
         while((m=re.exec(input))!==null){span(input.slice(last,m.index));var codes=m[0].slice(2,-1).split(';').filter(Boolean).map(Number);if(!codes.length){fg=null;bg=null;}else{for(var i=0;i<codes.length;i++){var c=codes[i];if(c===0){fg=null;bg=null;}else if(c===38&&codes[i+1]===5){fg=codes[i+2];i+=2;}else if(c===48&&codes[i+1]===5){bg=codes[i+2];i+=2;}}}last=re.lastIndex;}span(input.slice(last));return html;}
 
-    var loadingEl  = document.getElementById('bbs-loading');
-    var artEl      = document.getElementById('bbs-art');
-    var captionEl  = document.getElementById('bbs-caption');
-    var storiesEl  = document.getElementById('bbs-stories');
-    var labelEl    = document.querySelector('.bbs-stories-label');
+    function show(el){ if(el) el.style.display = ''; }
+
+    var loadingEl      = document.getElementById('bbs-loading');
+    var storiesSect    = document.getElementById('bbs-stories-section');
+    var storiesEl      = document.getElementById('bbs-stories');
+    var rule1          = document.getElementById('bbs-rule-1');
+    var artSect        = document.getElementById('bbs-art-section');
+    var artEl          = document.getElementById('bbs-art');
+    var captionEl      = document.getElementById('bbs-caption');
+    var rule2          = document.getElementById('bbs-rule-2');
+    var ctaPublic      = document.getElementById('bbs-cta-public');
 
     fetch('https://bbs.southpole.blog/api/bbs-preview')
         .then(function(r){ return r.json(); })
         .then(function(data){
             if (loadingEl) loadingEl.style.display = 'none';
 
+            // Stories
+            if (storiesEl) {
+                var items = (data.stories && data.stories.length)
+                    ? data.stories.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('')
+                    : '<li style="opacity:0.4">No stories yet.</li>';
+                storiesEl.innerHTML = items;
+                show(storiesSect);
+                show(rule1);
+            }
+
+            // Art
             if (data.art && artEl) {
                 artEl.innerHTML = ansiToHtml(data.art);
-                artEl.style.display = 'block';
+                // Force line-height via inline style to override any Ghost theme rule
+                artEl.style.lineHeight = '1';
+                show(artSect);
+                show(rule2);
             }
 
+            // Caption
             if (captionEl) {
                 var parts = [data.title, data.artist].filter(Boolean);
-                if (parts.length) {
-                    captionEl.textContent = parts.join(' \u2014 ');
-                    captionEl.style.display = 'block';
-                }
+                if (parts.length) captionEl.textContent = parts.join(' \u2014 ');
             }
 
-            if (storiesEl && data.stories && data.stories.length) {
-                storiesEl.innerHTML = data.stories.map(function(t){
-                    return '<li>&gt; ' + esc(t) + '</li>';
-                }).join('');
-                storiesEl.style.display = 'block';
-                if (labelEl) labelEl.style.display = 'block';
-            } else if (storiesEl) {
-                storiesEl.innerHTML = '<li class="muted">No stories yet.</li>';
-                storiesEl.style.display = 'block';
-                if (labelEl) labelEl.style.display = 'block';
-            }
+            // Non-member CTA — reveal after content is ready
+            if (ctaPublic) show(ctaPublic);
         })
         .catch(function(){
             if (loadingEl) loadingEl.style.display = 'none';
@@ -229,16 +243,15 @@
 }());
 </script>
 
-{{!-- Member CTA wiring lives in a separate block so Handlebars can emit uuid --}}
+{{!-- Member CTA — separate block so Handlebars can emit the member uuid --}}
 {{#unless @member}}{{else}}
 <script>
 (function () {
     var enterBtn  = document.getElementById('bbs-enter-btn');
     var inviteBtn = document.getElementById('bbs-invite-btn');
     var confirm   = document.getElementById('bbs-invite-confirm');
+    var ctaWrap   = document.getElementById('bbs-member-cta');
     var uuid      = '{{@member.uuid}}';
-
-    var ctaWrap = document.getElementById('bbs-member-cta');
 
     function showCta(el) {
         if (el) el.style.display = '';
