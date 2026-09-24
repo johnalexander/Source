@@ -26,7 +26,17 @@
                 <a href="#/portal">Subscribe to SouthPole to get access →</a>
             </p>
             {{else}}
-            {{!-- ── Subscriber: CTA (corrected by JS) ───────────────────── --}}
+            {{!-- ── Subscriber: terminal preview + CTA (corrected by JS) ── --}}
+            <div class="bbs-embed-wrap">
+                <iframe
+                    src="https://bbs.southpole.blog/embed?member=1"
+                    title="SouthPole BBS"
+                    frameborder="0"
+                    scrolling="no"
+                    class="bbs-embed-frame"
+                    loading="lazy"
+                ></iframe>
+            </div>
             <div
                 id="bbs-portal"
                 class="bbs-member-cta"
@@ -92,9 +102,10 @@
     .bbs-member-cta {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 12px;
-        padding: 24px 0;
+        padding: 20px 0 8px;
+        text-align: center;
     }
 
     .bbs-btn {
