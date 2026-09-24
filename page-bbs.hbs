@@ -33,19 +33,19 @@
 
             {{!-- ── CTA ─────────────────────────────────────────────────────── --}}
             {{#unless @member}}
-            <div class="bbs-cta-wrap" id="bbs-cta-public" style="display:none">
-                <a href="#/portal/signup" class="gh-button" data-portal="signup">
-                    Subscribe to SouthPole →
-                </a>
-            </div>
+            {{!-- Non-subscriber: plain text link only — nav + footer already have subscribe buttons --}}
+            <p class="bbs-access-hint" id="bbs-cta-public" style="display:none">
+                <a href="#/portal/signup" data-portal="signup">Subscribe for access →</a>
+            </p>
             {{else}}
+            {{!-- Member: single button, hidden until member-status resolves --}}
             <div class="bbs-cta-wrap" id="bbs-member-cta" style="display:none">
                 <a
                     href="https://bbs.southpole.blog"
                     id="bbs-enter-btn"
                     class="gh-button"
                     style="display:none"
-                >Enter the BBS →</a>
+                >BBS Login →</a>
                 <button
                     id="bbs-invite-btn"
                     class="gh-button gh-button-secondary"
@@ -159,13 +159,20 @@
         margin: 20px 0;
     }
 
-    /* CTA */
+    /* Non-subscriber text hint */
+    .bbs-access-hint {
+        text-align: center;
+        font-size: 0.9rem;
+        margin: 4px 0 8px;
+    }
+
+    /* Member CTA button */
     .bbs-cta-wrap {
         text-align: center;
         padding: 4px 0 8px;
     }
 
-    /* .gh-content a overrides gh-button's white text — fix it */
+    /* .gh-content a overrides gh-button's white text color — fix it */
     .bbs-cta-wrap a.gh-button {
         color: #fff;
         text-decoration: none;
