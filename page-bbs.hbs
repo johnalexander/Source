@@ -118,21 +118,30 @@
         opacity: 0.4;
     }
 
-    /* Art — Ghost themes often set line-height on pre; override both here and
-       via the inline style set by JS to guarantee no row gaps */
+    /* Art — Ghost themes often set line-height and background on pre;
+       override with high specificity and inline style fallback in JS */
+    .gh-content .bbs-art,
     .bbs-art {
         font-family: 'Courier New', Courier, 'Lucida Console', monospace;
-        font-size: clamp(6px, 1.05vw, 9.5px);
-        /* line-height MUST be exactly 1 — any larger creates white stripes */
+        font-size: clamp(5px, 0.7vw, 7px);
         line-height: 1 !important;
         white-space: pre;
         overflow: hidden;
         margin: 0 0 10px;
-        padding: 0;
-        /* reset any Ghost theme pre styles */
-        background: transparent;
-        border: none;
-        border-radius: 0;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Every span the ANSI renderer injects must be consistent height.
+       Without this, spans with background-color stretch taller than
+       bare text nodes, creating alternating short/tall rows. */
+    .bbs-art span {
+        display: inline;
+        line-height: 1;
+        vertical-align: bottom;
     }
 
     .bbs-caption {
