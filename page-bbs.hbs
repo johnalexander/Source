@@ -1,0 +1,195 @@
+{{!< default}}
+{{!-- Template for the /bbs page. In Ghost Admin, create a page with slug "bbs"
+     and this template is automatically applied. --}}
+
+{{#post}}
+<main class="gh-main">
+    <article class="gh-article {{post_class}}">
+
+        {{#match @page.show_title_and_feature_image}}
+            <header class="gh-article-header gh-canvas">
+                <h1 class="gh-article-title is-title">{{title}}</h1>
+                {{#if custom_excerpt}}
+                    <p class="gh-article-excerpt is-body">{{custom_excerpt}}</p>
+                {{/if}}
+            </header>
+        {{/match}}
+
+        <section class="gh-content gh-canvas bbs-page-section">
+
+            {{#unless @member}}
+            {{!-- ── Non-subscriber: teaser iframe ───────────────────────── --}}
+            <div class="bbs-embed-wrap">
+                <iframe
+                    src="https://bbs.southpole.blog/embed"
+                    title="SouthPole BBS Preview"
+                    frameborder="0"
+                    scrolling="no"
+                    class="bbs-embed-frame"
+                    loading="lazy"
+                ></iframe>
+            </div>
+            <p class="bbs-subscribe-hint">
+                <a href="#/portal">Subscribe to SouthPole to get access →</a>
+            </p>
+            {{else}}
+            {{!-- ── Subscriber: CTA (corrected by JS) ───────────────────── --}}
+            <div
+                id="bbs-portal"
+                class="bbs-member-cta"
+                data-uuid="{{@member.uuid}}"
+            >
+                <a
+                    href="https://bbs.southpole.blog"
+                    id="bbs-enter-btn"
+                    class="gh-button bbs-btn bbs-enter"
+                >Enter the BBS →</a>
+                <button
+                    id="bbs-invite-btn"
+                    class="gh-button bbs-btn bbs-invite"
+                    style="display:none"
+                    type="button"
+                >Send my BBS invite →</button>
+                <p id="bbs-invite-confirm" class="bbs-invite-confirm" style="display:none"></p>
+            </div>
+            {{/unless}}
+
+        </section>
+
+    </article>
+</main>
+
+<style>
+    /* ── Embed frame ─────────────────────────────────────────────── */
+    .bbs-embed-wrap {
+        width: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--color-border, #e5e7eb);
+        margin-bottom: 16px;
+    }
+
+    .bbs-embed-frame {
+        display: block;
+        width: 100%;
+        height: 720px;
+        border: none;
+    }
+
+    @media (max-width: 540px) {
+        .bbs-embed-frame {
+            height: 100vw;
+        }
+    }
+
+    /* ── Subscribe hint ──────────────────────────────────────────── */
+    .bbs-subscribe-hint {
+        text-align: center;
+        font-size: 0.9rem;
+        margin-top: 8px;
+    }
+
+    .bbs-subscribe-hint a {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    /* ── Member CTA ──────────────────────────────────────────────── */
+    .bbs-member-cta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 24px 0;
+    }
+
+    .bbs-btn {
+        display: inline-block;
+        padding: 10px 22px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .bbs-enter {
+        background: var(--ghost-accent-color, #15171a);
+        color: #fff;
+        border: none;
+    }
+
+    .bbs-invite {
+        background: transparent;
+        color: var(--ghost-accent-color, #15171a);
+        border: 2px solid currentColor;
+    }
+
+    .bbs-invite-confirm {
+        font-size: 0.875rem;
+        color: var(--color-secondary-text, #6b7280);
+    }
+</style>
+
+{{!-- ── JS: correct the subscriber CTA based on member-status API ── --}}
+{{#unless @member}}{{else}}
+<script>
+(function () {
+    var portal = document.getElementById('bbs-portal');
+    if (!portal) return;
+
+    var uuid = portal.dataset.uuid;
+    if (!uuid) return;
+
+    var enterBtn  = document.getElementById('bbs-enter-btn');
+    var inviteBtn = document.getElementById('bbs-invite-btn');
+    var confirm   = document.getElementById('bbs-invite-confirm');
+
+    // Check whether this member already has a BBS handle
+    fetch('https://bbs.southpole.blog/api/member-status?uuid=' + encodeURIComponent(uuid), {
+        credentials: 'omit'
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+        if (data && data.hasHandle === false) {
+            // No handle yet — show invite button instead
+            if (enterBtn)  enterBtn.style.display  = 'none';
+            if (inviteBtn) inviteBtn.style.display  = '';
+        }
+    })
+    .catch(function () {
+        // Network error — leave "Enter the BBS" visible; BBS login handles the edge case
+    });
+
+    // Invite button: request a fresh welcome email
+    if (inviteBtn) {
+        inviteBtn.addEventListener('click', function () {
+            inviteBtn.disabled = true;
+            fetch('https://bbs.southpole.blog/api/resend-welcome', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ uuid: uuid }),
+                credentials: 'omit'
+            })
+            .then(function () {
+                if (confirm) {
+                    confirm.textContent = 'Done — check your inbox for the invite link.';
+                    confirm.style.display = '';
+                }
+                inviteBtn.style.display = 'none';
+            })
+            .catch(function () {
+                inviteBtn.disabled = false;
+                if (confirm) {
+                    confirm.textContent = 'Something went wrong. Please try again.';
+                    confirm.style.display = '';
+                }
+            });
+        });
+    }
+}());
+</script>
+{{/unless}}
+
+{{/post}}
