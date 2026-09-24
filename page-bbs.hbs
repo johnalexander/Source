@@ -1,7 +1,7 @@
 {{!< default}}
 {{!-- Template for the /bbs page. Ghost Admin: create a page with slug "bbs".
      Fetches art + stories from BBS API. No iframe, no duplicate wordmark.
-     Layout: Recent Stories → Art Gallery → CTA --}}
+     Layout: Recent Stories → Recent Gallery → CTA --}}
 
 {{#post}}
 <main class="gh-main">
@@ -34,9 +34,9 @@
 
             <hr class="bbs-rule" id="bbs-rule-1" style="display:none">
 
-            {{!-- ── ART GALLERY ──────────────────────────────────────────────── --}}
+            {{!-- ── RECENT GALLERY ─────────────────────────────────────────────── --}}
             <div class="bbs-section" id="bbs-art-section" style="display:none">
-                <h3 class="bbs-section-heading">Art Gallery</h3>
+                <h3 class="bbs-section-heading">Recent Gallery</h3>
                 <pre class="bbs-art" id="bbs-art" aria-label="ASCII gallery art"></pre>
                 <p class="bbs-caption" id="bbs-caption"></p>
             </div>
