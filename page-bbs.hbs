@@ -34,7 +34,7 @@
             {{!-- ── CTA ─────────────────────────────────────────────────────── --}}
             {{#unless @member}}
             <div class="bbs-cta-wrap" id="bbs-cta-public" style="display:none">
-                <a href="#/portal/signup" class="gh-button bbs-cta-btn" data-portal="signup">
+                <a href="#/portal/signup" class="gh-button" data-portal="signup">
                     Subscribe to SouthPole →
                 </a>
             </div>
@@ -43,12 +43,12 @@
                 <a
                     href="https://bbs.southpole.blog"
                     id="bbs-enter-btn"
-                    class="gh-button bbs-cta-btn"
+                    class="gh-button"
                     style="display:none"
                 >Enter the BBS →</a>
                 <button
                     id="bbs-invite-btn"
-                    class="gh-button bbs-cta-btn bbs-cta-outline"
+                    class="gh-button gh-button-secondary"
                     type="button"
                     style="display:none"
                 >Send my BBS invite →</button>
@@ -163,25 +163,6 @@
     .bbs-cta-wrap {
         text-align: center;
         padding: 4px 0 8px;
-    }
-
-    .bbs-cta-btn {
-        display: inline-block;
-        padding: 10px 26px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        text-decoration: none;
-        border-radius: 4px;
-        cursor: pointer;
-        background: var(--ghost-accent-color, #15171a);
-        color: #fff;
-        border: none;
-    }
-
-    .bbs-cta-outline {
-        background: transparent;
-        color: var(--ghost-accent-color, #15171a);
-        border: 2px solid currentColor;
     }
 
     .bbs-invite-confirm {
