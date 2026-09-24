@@ -43,13 +43,8 @@
 
             <hr class="bbs-rule" id="bbs-rule-2" style="display:none">
 
-            {{!-- ── CTA ─────────────────────────────────────────────────────── --}}
-            {{#unless @member}}
-            {{!-- Non-subscriber: plain text link only — nav + footer already have subscribe buttons --}}
-            <p class="bbs-access-hint" id="bbs-cta-public" style="display:none">
-                <a href="#/portal/signup" data-portal="signup">Subscribe for access →</a>
-            </p>
-            {{else}}
+            {{!-- ── CTA — members only; non-subscribers use nav/footer subscribe ── --}}
+            {{#unless @member}}{{else}}
             {{!-- Member: single button, hidden until member-status resolves --}}
             <div class="bbs-cta-wrap" id="bbs-member-cta" style="display:none">
                 <a
@@ -178,13 +173,6 @@
         margin: 20px 0;
     }
 
-    /* Non-subscriber text hint */
-    .bbs-access-hint {
-        text-align: center;
-        font-size: 0.9rem;
-        margin: 4px 0 0;
-    }
-
     /* Member CTA button */
     .bbs-cta-wrap {
         text-align: center;
@@ -224,8 +212,6 @@
     var artEl          = document.getElementById('bbs-art');
     var captionEl      = document.getElementById('bbs-caption');
     var rule2          = document.getElementById('bbs-rule-2');
-    var ctaPublic      = document.getElementById('bbs-cta-public');
-
     fetch('https://bbs.southpole.blog/api/bbs-preview')
         .then(function(r){ return r.json(); })
         .then(function(data){
@@ -256,8 +242,6 @@
                 if (parts.length) captionEl.textContent = parts.join(' \u2014 ');
             }
 
-            // Non-member CTA — reveal after content is ready
-            if (ctaPublic) show(ctaPublic);
         })
         .catch(function(){
             if (loadingEl) loadingEl.style.display = 'none';
