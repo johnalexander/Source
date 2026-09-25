@@ -90,7 +90,8 @@
     .bbs-loading-bar {
         width: 120px;
         height: 3px;
-        background: #ccc;
+        background: currentColor;
+        opacity: 0.2;
         border-radius: 2px;
         animation: bbs-pulse 1.4s ease-in-out infinite;
     }
@@ -110,7 +111,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--color-darkgrey, #15171a);
+        color: inherit;
         margin: 0 0 12px;
         padding: 0;
     }
@@ -123,7 +124,7 @@
         font-family: 'Courier New', Courier, monospace;
         font-size: 14px;
         font-weight: 600;
-        color: var(--color-darkgrey, #15171a);
+        color: inherit;
         line-height: 1.8;
     }
 
@@ -162,14 +163,15 @@
         font-family: 'Courier New', Courier, monospace;
         font-size: 13px;
         font-weight: 600;
-        color: var(--color-darkgrey, #15171a);
+        color: inherit;
         margin: 0;
     }
 
     /* Divider */
     .bbs-rule {
         border: none;
-        border-top: 1px solid var(--color-border, #e5e7eb);
+        border-top: 1px solid currentColor;
+        opacity: 0.15;
         margin: 20px 0;
     }
 
