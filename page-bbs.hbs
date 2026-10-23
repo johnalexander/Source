@@ -96,6 +96,12 @@
         opacity: 0.6;
     }
 
+    /* Underline so the URL reads as a link without hovering */
+    .bbs-direct-link a {
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
     /* Loading skeleton */
     .bbs-loading {
         padding: 40px 0;
@@ -158,7 +164,11 @@
         line-height: 1 !important;
         white-space: pre;
         overflow: hidden;
-        margin: 0 0 10px;
+        /* Shrink to the art's width so it can be centred; max-width keeps
+           wide art clipped to the column on small screens */
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 auto 10px;
         padding: 0 !important;
         background: transparent !important;
         border: none !important;
