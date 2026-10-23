@@ -33,6 +33,13 @@
                 --background-color: #18181b;
             }
         }
+
+        {{!-- Text color is set by the script below, so fall back to a light background when scripting is disabled --}}
+        @media (scripting: none) {
+            :root {
+                --background-color: #fff;
+            }
+        }
     </style>
 
     <script>
