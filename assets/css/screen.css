@@ -70,6 +70,12 @@ production stylesheet in assets/built/screen.css
     --container-width: 1320px;
     --container-gap: clamp(24px, 1.7032rem + 1.9355vw, 48px);
     --grid-gap: 42px;
+    --color-accent-text: var(--ghost-accent-color);
+}
+
+/* Fall back to the text color when the accent color is unreadable on the background */
+:root.has-low-contrast-accent {
+    --color-accent-text: var(--color-darker-gray);
 }
 
 :root.has-light-text,
@@ -2093,7 +2099,7 @@ contrast against a dark background per the site's tag color/contrast doc. */
     font-weight: 500;
     letter-spacing: 0.01em;
     text-transform: uppercase;
-    color: var(--ghost-accent-color);
+    color: var(--color-accent-text);
 }
 
 .gh-article-title {
@@ -2277,7 +2283,7 @@ unless a heading is the very first element in the post content */
 }
 
 .gh-content a {
-    color: var(--ghost-accent-color);
+    color: var(--color-accent-text);
     text-decoration: underline;
 }
 
@@ -2459,7 +2465,7 @@ unless a heading is the very first element in the post content */
 
 blockquote:not([class]) {
     padding-left: 2rem;
-    border-left: 4px solid var(--ghost-accent-color);
+    border-left: 4px solid var(--color-accent-text);
 }
 
 blockquote.kg-blockquote-alt {
@@ -2585,7 +2591,7 @@ figcaption {
 }
 
 figcaption a {
-    color: var(--ghost-accent-color);
+    color: var(--color-accent-text);
     text-decoration: underline;
 }
 

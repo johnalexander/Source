@@ -45,21 +45,31 @@
     <script>
         /* The script for calculating the color contrast has been taken from
         https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
-        function updateTextColorClass() {
-            var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
-            accentColor = accentColor.trim().slice(1);
+        function getBrightness(color) {
+            color = color.trim().slice(1);
 
-            if (accentColor.length === 3) {
-                accentColor = accentColor[0] + accentColor[0] + accentColor[1] + accentColor[1] + accentColor[2] + accentColor[2];
+            if (color.length === 3) {
+                color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
             }
 
-            var r = parseInt(accentColor.substr(0, 2), 16);
-            var g = parseInt(accentColor.substr(2, 2), 16);
-            var b = parseInt(accentColor.substr(4, 2), 16);
-            var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-            var textColor = (yiq >= 128) ? 'dark' : 'light';
+            var r = parseInt(color.substr(0, 2), 16);
+            var g = parseInt(color.substr(2, 2), 16);
+            var b = parseInt(color.substr(4, 2), 16);
+            return ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        }
 
-            document.documentElement.className = `has-${textColor}-text`;
+        function updateTextColorClass() {
+            var backgroundBrightness = getBrightness(getComputedStyle(document.documentElement).getPropertyValue('--background-color'));
+            var textColor = (backgroundBrightness >= 128) ? 'dark' : 'light';
+            var className = `has-${textColor}-text`;
+
+            /* Links use the accent color, so fall back to the text color when the accent is too close to the background */
+            var accentBrightness = getBrightness('{{@site.accent_color}}');
+            if (!isNaN(accentBrightness) && Math.abs(accentBrightness - backgroundBrightness) < 64) {
+                className += ' has-low-contrast-accent';
+            }
+
+            document.documentElement.className = className;
         }
 
         updateTextColorClass();
